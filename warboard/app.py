@@ -12,8 +12,8 @@ USERS={'mikko':'cool engineer'}
 def index():
     return {'hello': 'world'}
 
-@app.route("/user/{user}", methods=["POST"])
-def create_user(): 
+@app.route("/user/{user}", methods=["POST", "GET", "PUT"])
+def user_methods(): 
     client = boto3.client("dynamodb")
     tables = client.list_tables().get("TableNames")
     for table in tables: 
@@ -21,12 +21,43 @@ def create_user():
             user_table_name = table
 
     request_method = app.current_request.method
-    if request_method == "POST":
-        dynamo_resource = boto3.resource("dynamodb")
-        user_table = dynamo_resource.Table(user_table_name)
+    dynamo_resource = boto3.resource("dynamodb")
+    user_table = dynamo_resource.Table(user_table_name)
+    # Create a new user or update an existing one
+    if request_method == "POST" or request_method == "PUT":
         user_table.put_item(user)
+    # Retrieve existing user
+    if request_method == "GET":
+        returned_user = user_table.get_item(
+            Key={
+                "UserName": user.get("UserName")
+            }
+        )
+        return returned_user
 
+@app.route("/project/{project}", methods=["POST", "GET", "PUT"])
+def user_methods(): 
+    client = boto3.client("dynamodb")
+    tables = client.list_tables().get("TableNames")
+    for table in tables: 
+        if "projectTable" in table: 
+            project_table_name = table
 
+    request_method = app.current_request.method
+    dynamo_resource = boto3.resource("dynamodb")
+    project_table = dynamo_resource.Table(user_table_name)
+    # Create a new user or update an existing one
+    if request_method == "POST" or request_method == "PUT":
+        project_table.put_item(project)
+    # Retrieve existing user
+    if request_method == "GET":
+        returned_project = project_table.get_item(
+            Key={
+                "UserName": project.get("ProjectName")
+            }
+        )
+
+        return returned_project
 
 # The view function above will return {"hello": "world"}
 # whenever you make an HTTP GET request to '/'.
