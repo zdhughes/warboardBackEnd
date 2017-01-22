@@ -32,34 +32,40 @@ Returns a specific project's resourcing status
 Updates the provided project's resourcing status, given the project's currently assigned team
 
 ## User Data Model: 
-Id:	87
+```
+{ 	
+  “UserName”: “mikko”,
+	“Id”: “87”,
+	“Email”: “mikko.caldara@cloudreach.com”,
+	“Skills” : { “ruby” : 9,
+               “python”: 6,
+               “cloudformation”: 8, 
+               “Vpc”: 8
+  },
+	“Position”: “engineer”,
+	“Country”: “UK”
+}
 
-Position:	engineer
-
-UserName: zachary
+```
 
 ## Project Data Model: 
-End: 2017-06-30
+```
+{
+  "name": "fitch",
+	"Id" : "104",
+	"Startdate” : "2017-01-01",
+	"Enddate” : "2017-05-31",
+	"Skills”: [“ruby”, “terraform”, “cloudformation”, “dynamodb”]
+	"Resourced” : True,
+	"Team" : [“clark”, “sean”, “mikko”, “yvonne”, “zach”],
+	“Requirements” : { “engineer” : 3,
+                      “pm” : 1,
+                      “architect” : 1 
+   },
+   “Country”: “US”
+ }
+ ```
 
-Id:	100
-
-ProjectName: MomCorp
-
-RequirementsMap:
-architect:	1,
-engineer:	2,
-pm:	1
-
-resourced: true
-
-Start: 2017-04-01
-
-Team: 
-  mikko,
-  yvonne,
-  clark,
-  sean,
-  zachary
 
 # TODO
 - Add Google Authentication
