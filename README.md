@@ -26,7 +26,7 @@ Deletes a user
 ## GET /project/{project}/status
 Returns a specific project resourcing status
 ## PUT /project/{project}/status
-Updates a specific project resourcing status automatically
+(no input required) Automatically updates a specific project resourcing status, based on the currently assigned Team
 
 
 # TODO
