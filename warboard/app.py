@@ -13,11 +13,11 @@ def index():
     return {'hello': 'world'}
 
 @app.route("/users/{user}", methods=["POST", "GET", "PUT"])
-def user_methods(user): 
+def user_methods(user):
     client = boto3.client("dynamodb")
     tables = client.list_tables().get("TableNames")
-    for table in tables: 
-        if "personTable" in table: 
+    for table in tables:
+        if "personTable" in table:
             user_table_name = table
 
     request_method = app.current_request.method
@@ -40,8 +40,8 @@ def project_methods():
     request = app.current_request
     client = boto3.client("dynamodb")
     tables = client.list_tables().get("TableNames")
-    for table in tables: 
-        if "projectTable" in table: 
+    for table in tables:
+        if "projectTable" in table:
             project_table_name = table
 
     request_method = app.current_request.method
@@ -52,18 +52,18 @@ def project_methods():
         print "Making it into post method"
         project_table.put_item(
             Item=request.json_body
-                
+
         )
-    # Retrieve existing project 
+    # Retrieve existing project
     if request_method == "GET":
         return project_table.scan().get("Items")
 
-@app.route("/projects/{project}", methods=["PUT", "GET"])
+@app.route("/projects/{project}", methods=["PUT", "GET", "DELETE"])
 def put_project(project):
     client = boto3.client("dynamodb")
     tables = client.list_tables().get("TableNames")
-    for table in tables: 
-        if "projectTable" in table: 
+    for table in tables:
+        if "projectTable" in table:
             project_table_name = table
 
     request_method = app.current_request.method
@@ -71,24 +71,29 @@ def put_project(project):
     project_table = dynamo_resource.Table(project_table_name)
     # Create a new user or update an existing one
     if request_method == "PUT":
-        project_table.put_item(
-            Item={
-                "ProjectName" : project
+        project_table.update_item(
+            Key={
+                "ProjectName" : project,
                 },
-            UpdateExpression='SET Location = :val1, Id = :val2 ',
+            UpdateExpression='SET Country = :val1, Id = :val2',
             ExpressionAttributeValues={
                 ':val1': 'US',
                 ':val2': 123
-            }    
+            }
         )
-    if request_method == "GET": 
+    if request_method == "GET":
         retrieved_project = project_table.get_item(
             Key={
                 "ProjectName": project
             }
         ).get("Item")
         return retrieved_project
-
+    if request_method == "DELETE":
+        retrieved_project = project_table.delete_item(
+            Key={
+                "ProjectName": project
+            }
+        )
 
 # The view function above will return {"hello": "world"}
 # whenever you make an HTTP GET request to '/'.
