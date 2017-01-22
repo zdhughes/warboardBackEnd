@@ -144,3 +144,22 @@ def put_project(project):
                 "ProjectName": project
             }
         )
+
+@app.route("/projects/{project}/status", methods=["GET","PUT"])
+def get_project_status(project):
+    client = boto3.client("dynamodb")
+    tables = client.list_tables().get("TableNames")
+    for table in tables:
+        if "projectTable" in table:
+            project_table_name = table
+
+    request_method = app.current_request.method
+    dynamo_resource = boto3.resource("dynamodb")
+    project_table = dynamo_resource.Table(project_table_name)
+    # Get project status
+    if request_method == "GET":
+
+    # Update project status
+    if request_method == "PUT":
+
+
