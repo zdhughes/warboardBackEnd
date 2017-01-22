@@ -12,8 +12,8 @@ USERS={'mikko':'cool engineer'}
 def index():
     return {'hello': 'world'}
 
-@app.route("/user/{user}", methods=["POST", "GET", "PUT"])
-def user_methods(): 
+@app.route("/users/{user}", methods=["POST", "GET", "PUT"])
+def user_methods(user): 
     client = boto3.client("dynamodb")
     tables = client.list_tables().get("TableNames")
     for table in tables: 
@@ -30,13 +30,14 @@ def user_methods():
     if request_method == "GET":
         returned_user = user_table.get_item(
             Key={
-                "UserName": user.get("UserName")
+                "UserName": user
             }
         )
-        return returned_user
+        return returned_user.get("Item")
 
-@app.route("/project/{project}", methods=["POST", "GET", "PUT"])
-def user_methods(): 
+@app.route("/projects", methods=["POST", "GET"])
+def project_methods():
+    request = app.current_request
     client = boto3.client("dynamodb")
     tables = client.list_tables().get("TableNames")
     for table in tables: 
@@ -45,19 +46,49 @@ def user_methods():
 
     request_method = app.current_request.method
     dynamo_resource = boto3.resource("dynamodb")
-    project_table = dynamo_resource.Table(user_table_name)
-    # Create a new user or update an existing one
-    if request_method == "POST" or request_method == "PUT":
-        project_table.put_item(project)
-    # Retrieve existing user
-    if request_method == "GET":
-        returned_project = project_table.get_item(
-            Key={
-                "UserName": project.get("ProjectName")
-            }
-        )
+    project_table = dynamo_resource.Table(project_table_name)
 
-        return returned_project
+    if request_method == "POST":
+        print "Making it into post method"
+        project_table.put_item(
+            Item=request.json_body
+                
+        )
+    # Retrieve existing project 
+    if request_method == "GET":
+        return project_table.scan().get("Items")
+
+@app.route("/projects/{project}", methods=["PUT", "GET"])
+def put_project(project):
+    client = boto3.client("dynamodb")
+    tables = client.list_tables().get("TableNames")
+    for table in tables: 
+        if "projectTable" in table: 
+            project_table_name = table
+
+    request_method = app.current_request.method
+    dynamo_resource = boto3.resource("dynamodb")
+    project_table = dynamo_resource.Table(project_table_name)
+    # Create a new user or update an existing one
+    if request_method == "PUT":
+        project_table.put_item(
+            Item={
+                "ProjectName" : project
+                },
+            UpdateExpression='SET Location = :val1, Id = :val2 ',
+            ExpressionAttributeValues={
+                ':val1': 'US',
+                ':val2': 123
+            }    
+        )
+    if request_method == "GET": 
+        retrieved_project = project_table.get_item(
+            Key={
+                "ProjectName": project
+            }
+        ).get("Item")
+        return retrieved_project
+
 
 # The view function above will return {"hello": "world"}
 # whenever you make an HTTP GET request to '/'.
@@ -80,43 +111,43 @@ def user_methods():
 #     # user_id = db.create_user(user_as_json)
 #     return USERS
 
-@app.route('/users/{user}', methods=['GET','PUT','DELETE'])
-def myuser(user):
-    request = app.current_request
-    if request.method == 'PUT':
-        USERS[user] = request.json_body
-    elif request.method == 'GET':
-        try:
-            return {user: USERS[user]}
-        except KeyError:
-            raise NotFoundError(user)
-    elif request.method == 'DELETE':
-        try:
-            del USERS[user]
-        except KeyError:
-            raise NotFoundError(user)
+# @app.route('/users/{user}', methods=['GET','PUT','DELETE'])
+# def myuser(user):
+#     request = app.current_request
+#     if request.method == 'PUT':
+#         USERS[user] = request.json_body
+#     elif request.method == 'GET':
+#         try:
+#             return {user: USERS[user]}
+#         except KeyError:
+#             raise NotFoundError(user)
+#     elif request.method == 'DELETE':
+#         try:
+#             del USERS[user]
+#         except KeyError:
+#             raise NotFoundError(user)
 
-@app.route('/projects', methods=['GET'])
-def create_project():
-    # This is the JSON body the user sent in their POST request.
-    #project_as_json = app.json_body
-    # Suppose we had some 'db' object that we used to
-    # read/write from our database.
-    # user_id = db.create_user(user_as_json)
-    return PROJECTS
+# @app.route('/projects', methods=['GET'])
+# def create_project():
+#     # This is the JSON body the user sent in their POST request.
+#     #project_as_json = app.json_body
+#     # Suppose we had some 'db' object that we used to
+#     # read/write from our database.
+#     # user_id = db.create_user(user_as_json)
+#     return PROJECTS
 
-@app.route('/projects/{project}', methods=['GET','PUT','DELETE'])
-def myproject(project):
-    request = app.current_request
-    if request.method == 'PUT':
-	PROJECTS[project] = request.json_body
-    elif request.method == 'GET':
-        try:
-            return {project: PROJECTS[project]}
-        except KeyError:
-            raise NotFoundError(project)
-    elif request.method == 'DELETE':
-        try:
-            del PROJECTS[project]
-        except KeyError:
-            raise NotFoundError(project)
+# @app.route('/projects/{project}', methods=['GET','PUT','DELETE'])
+# def myproject(project):
+#     request = app.current_request
+#     if request.method == 'PUT':
+# 	PROJECTS[project] = request.json_body
+#     elif request.method == 'GET':
+#         try:
+#             return {project: PROJECTS[project]}
+#         except KeyError:
+#             raise NotFoundError(project)
+#     elif request.method == 'DELETE':
+#         try:
+#             del PROJECTS[project]
+#         except KeyError:
+#             raise NotFoundError(project)

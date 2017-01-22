@@ -3,6 +3,16 @@
   "Statement": [
     {
       "Action": [
+        "dynamodb:ListTables"
+      ],
+      "Resource": [
+        "*"
+      ],
+      "Effect": "Allow",
+      "Sid": "4d54141095f44041b56f4e6c609a9e7c"
+    },
+    {
+      "Action": [
         "logs:CreateLogGroup",
         "logs:CreateLogStream",
         "logs:PutLogEvents"
