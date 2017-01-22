@@ -1,5 +1,7 @@
 # Warboard backend API
 
+https://7wpxm2y4dc.execute-api.us-east-1.amazonaws.com/dev/
+
 API Gateway backed by DynamoDB
 
 Currently supported APIs:
