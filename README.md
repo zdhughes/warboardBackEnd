@@ -27,3 +27,11 @@ Deletes a user
 Returns a specific project resourcing status
 ## PUT /project/{project}/status
 Updates a specific project resourcing status automatically
+
+
+# TODO
+- Add Google Authentication
+- Add user's availability and match against project requirements, with suggestions.
+- Add skills matching between projects and users
+- Import data from current resource spreadsheet
+- Import data from current skills spreadsheet
