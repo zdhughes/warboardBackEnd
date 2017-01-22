@@ -5,9 +5,6 @@ import boto3
 app = Chalice(app_name='warboard')
 app.debug = True
 
-PROJECTS={'fitch':'cool project'}
-USERS={'mikko':'cool engineer'}
-
 @app.route('/')
 def index():
     return {'hello': 'world'}
@@ -168,8 +165,8 @@ def get_project_status(project):
 
     # Update project status
     if request_method == "PUT":
-        for table in tables: 
-            if "personTable" in table: 
+        for table in tables:
+            if "personTable" in table:
                 user_table_name = table
 
         project_items = project_table.scan().get("Items")
@@ -177,16 +174,16 @@ def get_project_status(project):
             Key={
             "ProjectName": project
             }).get("Item")
-        
+
         project_requirements = requested_project["Requirements"]
         requirements_dictionary = {}
-        for field in project_requirements: 
+        for field in project_requirements:
             requirements_dictionary[str(field).lower()] = int(project_requirements.get(field))
 
         project_team = requested_project.get("Team")
         user_table_resource = dynamo_resource.Table(user_table_name)
 
-        for member in project_team: 
+        for member in project_team:
             member_item = user_table_resource.get_item(Key={
                 "UserName": member
                 }
@@ -197,10 +194,10 @@ def get_project_status(project):
 
         requirements_met_flag = 1
         for requirement in requirements_dictionary.values():
-            if requirement > 0: 
+            if requirement > 0:
                 requirements_met_flag = 0
 
-        if requirements_met_flag: 
+        if requirements_met_flag:
             project_table.update_item(
                 Key={
                     "ProjectName": project
@@ -210,7 +207,7 @@ def get_project_status(project):
                     ":val": True
                 }
             )
-        else: 
+        else:
             project_table.update_item(
                 Key={
                     "ProjectName": project
