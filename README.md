@@ -2,7 +2,7 @@
 
 https://7wpxm2y4dc.execute-api.us-east-1.amazonaws.com/dev/
 
-API Gateway deplyed via Chalice.
+API Gateway deployed via Chalice.
 Backed by DynamoDB for persistent data.
 
 Currently supported APIs:
@@ -34,14 +34,14 @@ Updates the provided project's resourcing status, given the project's currently 
 ## User Data Model: 
 ```
 { 	
-  “UserName”: “mikko”,
+  	"UserName": “mikko”,
 	“Id”: “87”,
 	“Email”: “mikko.caldara@cloudreach.com”,
 	“Skills” : { “ruby” : 9,
                “python”: 6,
                “cloudformation”: 8, 
                “Vpc”: 8
-  },
+  	 },
 	“Position”: “engineer”,
 	“Country”: “UK”
 }
@@ -51,7 +51,7 @@ Updates the provided project's resourcing status, given the project's currently 
 ## Project Data Model: 
 ```
 {
-  "name": "fitch",
+   	"ProjectName": "fitch",
 	"Id" : "104",
 	"Startdate” : "2017-01-01",
 	"Enddate” : "2017-05-31",
@@ -61,8 +61,8 @@ Updates the provided project's resourcing status, given the project's currently 
 	“Requirements” : { “engineer” : 3,
                       “pm” : 1,
                       “architect” : 1 
-   },
-   “Country”: “US”
+   	},
+   	"Country": “US”
  }
  ```
 
