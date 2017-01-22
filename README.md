@@ -31,6 +31,27 @@ Returns a specific project's resourcing status
 ## PUT /projects/{project}/status
 Updates the provided project's resourcing status, given the project's currently assigned team
 
+User Data Model: 
+Id:	87
+Position:	engineer
+UserName: zachary
+
+Project Data Model: 
+End: 2017-06-30
+Id:	100
+ProjectName: MomCorp
+RequirementsMap:
+  architect:	1
+  engineer:	2
+  pm:	1
+resourced: true
+Start: 2017-04-01
+Team: 
+  mikko
+  yvonne
+  clark
+  sean
+  zachary
 
 # TODO
 - Add Google Authentication
