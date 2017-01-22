@@ -158,8 +158,66 @@ def get_project_status(project):
     project_table = dynamo_resource.Table(project_table_name)
     # Get project status
     if request_method == "GET":
+        retrieved_project = project_table.get_item(
+            Key={
+                "ProjectName": project
+            }).get("Item")
+        resourced={}
+        resourced['resourced'] = retrieved_project.get("resourced")
+        return resourced
 
     # Update project status
     if request_method == "PUT":
+        for table in tables: 
+            if "personTable" in table: 
+                user_table_name = table
 
+        project_items = project_table.scan().get("Items")
+        requested_project = project_table.get_item(
+            Key={
+            "ProjectName": project
+            }).get("Item")
+        
+        project_requirements = requested_project["Requirements"]
+        requirements_dictionary = {}
+        for field in project_requirements: 
+            requirements_dictionary[str(field).lower()] = int(project_requirements.get(field))
+
+        project_team = requested_project.get("Team")
+        user_table_resource = dynamo_resource.Table(user_table_name)
+
+        for member in project_team: 
+            member_item = user_table_resource.get_item(Key={
+                "UserName": member
+                }
+            ).get("Item")
+            print member_item
+            if member_item.get("Position") in requirements_dictionary:
+                requirements_dictionary[member_item.get("Position")] -= 1
+
+        requirements_met_flag = 1
+        for requirement in requirements_dictionary.values():
+            if requirement > 0: 
+                requirements_met_flag = 0
+
+        if requirements_met_flag: 
+            project_table.update_item(
+                Key={
+                    "ProjectName": project
+                },
+                UpdateExpression="SET resourced = :val",
+                ExpressionAttributeValues={
+                    ":val": True
+                }
+            )
+        else: 
+            project_table.update_item(
+                Key={
+                    "ProjectName": project
+                },
+                UpdateExpression="SET resourced = :val",
+                ExpressionAttributeValues={
+                    ":val": False
+                }
+            )
 
