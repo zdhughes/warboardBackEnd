@@ -15,21 +15,21 @@ Returns the list of users
 ## POST /users
 Creates a new user
 ## GET /projects/{project}
-Returns the details about a specific project
+Returns all details for the indicated project
 ## PUT /projects/{project}
-Updates a specific project's attributes
+Updates the indicated project's attributes
 ## DELETE /projects/{project}
-Deletes a project
+Deletes the indicated project
 ## GET /users/{user}
-Returns the details about a specific user
+Returns all details for the indicated user
 ## PUT /users/{user}
 Updates a specific user's attributes
 ## DELETE /users/{user}
-Deletes a user
+Deletes the indicated user
 ## GET /project/{project}/status
-Returns a specific project resourcing status
+Returns a specific project's resourcing status
 ## PUT /project/{project}/status
-(no input required) Automatically updates a specific project resourcing status, based on the currently assigned Team
+Updates the provided project's resourcing status, given the project's currently assigned team
 
 
 # TODO
