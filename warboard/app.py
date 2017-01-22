@@ -7,7 +7,7 @@ app.debug = True
 
 @app.route('/')
 def index():
-    return {'hello': 'world'}
+    return 'Nothing to see here, move along. Check out /dev/projects'
 
 @app.route("/users", methods=["POST", "GET"])
 def project_methods():
