@@ -47,15 +47,21 @@ def user_methods(user):
     user_table = dynamo_resource.Table(user_table_name)
     # Create a new user or update an existing one
     if request_method == "PUT":
+        expression_list = []
+        values = {}
+        n=0
+        for key in app.current_request.json_body.keys():
+            n+=1
+            expression_list.append(key+ ' = :val'+str(n))
+            values[':val'+str(n)] = app.current_request.json_body[key]
+
+        update_expression = 'SET '+ (", ".join(expression_list))
         user_table.update_item(
             Key={
                 "UserName" : user,
                 },
-            UpdateExpression='SET Country = :val1, Id = :val2',
-            ExpressionAttributeValues={
-                ':val1': 'US',
-                ':val2': 123
-            }
+            UpdateExpression=update_expression,
+            ExpressionAttributeValues=values
         )
     # Retrieve existing user
     if request_method == "GET":
@@ -109,15 +115,21 @@ def put_project(project):
     project_table = dynamo_resource.Table(project_table_name)
     # Create a new user or update an existing one
     if request_method == "PUT":
+        expression_list = []
+        values = {}
+        n=0
+        for key in app.current_request.json_body.keys():
+            n+=1
+            expression_list.append(key+ ' = :val'+str(n))
+            values[':val'+str(n)] = app.current_request.json_body[key]
+
+        update_expression = 'SET '+ (", ".join(expression_list))
         project_table.update_item(
             Key={
                 "ProjectName" : project,
                 },
-            UpdateExpression='SET Country = :val1, Id = :val2',
-            ExpressionAttributeValues={
-                ':val1': 'US',
-                ':val2': 123
-            }
+            UpdateExpression=update_expression,
+            ExpressionAttributeValues=values
         )
     if request_method == "GET":
         retrieved_project = project_table.get_item(
