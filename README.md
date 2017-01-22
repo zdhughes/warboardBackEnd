@@ -26,9 +26,9 @@ Returns all details for the indicated user
 Updates a specific user's attributes
 ## DELETE /users/{user}
 Deletes the indicated user
-## GET /project/{project}/status
+## GET /projects/{project}/status
 Returns a specific project's resourcing status
-## PUT /project/{project}/status
+## PUT /projects/{project}/status
 Updates the provided project's resourcing status, given the project's currently assigned team
 
 
