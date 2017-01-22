@@ -2,7 +2,8 @@
 
 https://7wpxm2y4dc.execute-api.us-east-1.amazonaws.com/dev/
 
-API Gateway backed by DynamoDB
+API Gateway deplyed via Chalice.
+Backed by DynamoDB for persistent data.
 
 Currently supported APIs:
 ## GET /projects
